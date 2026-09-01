@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" 
+     width="500" 
+     height="500" 
+     viewBox="0 0 500 500"> 
+ 
+  <!-- Fondo --> 
+  <rect width="500" height="500" fill="white"/> 
+ 
+  <!-- ========================= --> 
+  <!-- TABLERO 4 x 4             --> 
+  <!-- ========================= --> 
+ 
+  <!-- Líneas verticales --> 
+  <line x1="80"  y1="40" x2="80"  y2="440" stroke="black" stroke-width="2"/> 
+  <line x1="180" y1="40" x2="180" y2="440" stroke="black" stroke-width="2"/> 
+  <line x1="280" y1="40" x2="280" y2="440" stroke="black" stroke-width="2"/> 
+  <line x1="380" y1="40" x2="380" y2="440" stroke="black" stroke-width="2"/> 
+  <line x1="480" y1="40" x2="480" y2="440" stroke="black" stroke-width="2"/> 
+ 
+  <!-- Líneas horizontales --> 
+  <line x1="80" y1="40"  x2="480" y2="40"  stroke="black" stroke-width="2"/> 
+  <line x1="80" y1="140" x2="480" y2="140" stroke="black" stroke-width="2"/> 
+  <line x1="80" y1="240" x2="480" y2="240" stroke="black" stroke-width="2"/> 
+  <line x1="80" y1="340" x2="480" y2="340" stroke="black" stroke-width="2"/> 
+  <line x1="80" y1="440" x2="480" y2="440" stroke="black" stroke-width="2"/> 
+ 
+  <!-- ========================= --> 
+  <!-- NÚMEROS DE COLUMNAS       --> 
+  <!-- ========================= --> 
+ 
+  <text x="130" y="25" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold">1</text> 
+ 
+  <text x="230" y="25" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold">2</text> 
+ 
+  <text x="330" y="25" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold">3</text> 
+ 
+  <text x="430" y="25" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold">4</text> 
+ 
+  <!-- ========================= --> 
+  <!-- NÚMEROS DE FILAS          --> 
+  <!-- ========================= --> 
+ 
+  <text x="50" y="105" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold">4</text> 
+ 
+  <text x="50" y="205" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold">3</text> 
+ 
+  <text x="50" y="305" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold">2</text> 
+ 
+  <text x="50" y="405" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold">1</text> 
+ 
+  <!-- ========================= --> 
+  <!-- ELEMENTOS DEL MUNDO       --> 
+  <!-- ========================= --> 
+ 
+  <!-- Oro: columna 4, fila 4 --> 
+  <text x="430" y="115" 
+        text-anchor="middle" 
+        font-size="48">💰</text> 
+ 
+  <!-- Hueco: columna 1, fila 3 --> 
+  <text x="130" y="215" 
+        text-anchor="middle" 
+        font-size="48">🕳️</text> 
+ 
+  <!-- Hueco: columna 2, fila 3 --> 
+  <text x="230" y="215" 
+        text-anchor="middle" 
+        font-size="48">🕳️</text> 
+ 
+  <!-- Hueco: columna 3, fila 3 --> 
+  <text x="330" y="215" 
+        text-anchor="middle" 
+        font-size="48">🕳️</text> 
+ 
+  <!-- Wumpus: columna 4, fila 3 --> 
+  <text x="430" y="215" 
+        text-anchor="middle" 
+        font-size="48">👹</text> 
+ 
+  <!-- Jugador: columna 1, fila 1 --> 
+  <text x="130" y="415" 
+        text-anchor="middle" 
+        font-size="48">🧑</text> 
+ 
+</svg>
