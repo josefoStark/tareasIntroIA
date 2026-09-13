@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de Rumania — Grafo de búsqueda</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f7f7;
+    color: #222;
+  }
+  .wrap {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 16px;
+  }
+  h1 { margin: 0 0 6px; font-size: 25px; }
+  p { margin: 0 0 16px; color: #555; }
+  .card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  svg { width: 100%; height: auto; display: block; }
+  .edge { stroke: #555; stroke-width: 2; transition: all .2s ease; }
+  .edge.highlight { stroke: #e53935; stroke-width: 6; }
+  .edge.dim { opacity: .25; }
+  .weight {
+    font-size: 14px;
+    font-weight: bold;
+    fill: #222;
+    paint-order: stroke;
+    stroke: white;
+    stroke-width: 5px;
+    stroke-linejoin: round;
+  }
+  .city {
+    font-size: 15px;
+    font-weight: bold;
+    fill: #111;
+    pointer-events: none;
+  }
+  .node {
+    fill: #fff;
+    stroke: #222;
+    stroke-width: 3;
+    cursor: pointer;
+  }
+  .node:hover { fill: #e9f2ff; }
+  .node.selected { fill: #ffe08a; }
+  .legend {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #555;
+  }
+  #info {
+    margin-top: 10px;
+    min-height: 20px;
+    font-size: 14px;
+  }
+  button {
+    border: 1px solid #bbb;
+    background: white;
+    border-radius: 6px;
+    padding: 7px 12px;
+    cursor: pointer;
+  }
+  button:hover { background: #f0f0f0; }
+  .route-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 4px 0 12px;
+  }
+  #route {
+    flex: 1 1 420px;
+    min-width: 280px;
+    padding: 8px 10px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Mapa de Rumania — grafo ponderado</h1>
+  <p>Escribe una ruta separando las ciudades por comas para resaltar las conexiones recorridas.</p>
+  <div class="route-controls">
+    <label for="route"><strong>Ruta:</strong></label>
+    <input id="route" type="text"
+           placeholder="Ejemplo: Arad, Sibiu, Fagaras, Bucharest"
+           autocomplete="off">
+    <button onclick="highlightRoute()">Resaltar ruta</button>
+    <button onclick="clearRoute()">Limpiar ruta</button>
+  </div>
+
+  <div class="card">
+    <svg viewBox="0 0 1000 660" aria-label="Mapa de ciudades y carreteras de Rumania">
+      <!-- Aristas -->
+      <g class="edges">
+        <line class="edge" data-from="Oradea" data-to="Zerind" x1="130" y1="70" x2="95" y2="135"/>
+        <line class="edge" data-from="Zerind" data-to="Arad" x1="95" y1="135" x2="65" y2="215"/>
+        <line class="edge" data-from="Oradea" data-to="Sibiu" x1="130" y1="70" x2="285" y2="265"/>
+        <line class="edge" data-from="Arad" data-to="Sibiu" x1="65" y1="215" x2="285" y2="265"/>
+        <line class="edge" data-from="Arad" data-to="Timisoara" x1="65" y1="215" x2="70" y2="345"/>
+        <line class="edge" data-from="Timisoara" data-to="Lugoj" x1="70" y1="345" x2="190" y2="405"/>
+        <line class="edge" data-from="Lugoj" data-to="Mehadia" x1="190" y1="405" x2="195" y2="480"/>
+        <line class="edge" data-from="Mehadia" data-to="Drobeta" x1="195" y1="480" x2="185" y2="545"/>
+        <line class="edge" data-from="Drobeta" data-to="Craiova" x1="185" y1="545" x2="315" y2="565"/>
+        <line class="edge" data-from="Craiova" data-to="Pitesti" x1="315" y1="565" x2="430" y2="420"/>
+        <line class="edge" data-from="Craiova" data-to="Rimnicu Vilcea" x1="315" y1="565" x2="330" y2="350"/>
+        <line class="edge" data-from="Rimnicu Vilcea" data-to="Sibiu" x1="330" y1="350" x2="285" y2="265"/>
+        <line class="edge" data-from="Rimnicu Vilcea" data-to="Pitesti" x1="330" y1="350" x2="430" y2="420"/>
+        <line class="edge" data-from="Sibiu" data-to="Fagaras" x1="285" y1="265" x2="465" y2="265"/>
+        <line class="edge" data-from="Fagaras" data-to="Bucharest" x1="465" y1="265" x2="585" y2="495"/>
+        <line class="edge" data-from="Pitesti" data-to="Bucharest" x1="430" y1="420" x2="585" y2="495"/>
+        <line class="edge" data-from="Bucharest" data-to="Giurgiu" x1="585" y1="495" x2="535" y2="605"/>
+        <line class="edge" data-from="Bucharest" data-to="Urziceni" x1="585" y1="495" x2="700" y2="455"/>
+        <line class="edge" data-from="Urziceni" data-to="Hirsova" x1="700" y1="455" x2="820" y2="455"/>
+        <line class="edge" data-from="Hirsova" data-to="Eforie" x1="820" y1="455" x2="870" y2="540"/>
+        <line class="edge" data-from="Urziceni" data-to="Vaslui" x1="700" y1="455" x2="765" y2="275"/>
+        <line class="edge" data-from="Vaslui" data-to="Iasi" x1="765" y1="275" x2="705" y2="175"/>
+        <line class="edge" data-from="Iasi" data-to="Neamt" x1="705" y1="175" x2="575" y2="120"/>
+
+        <!-- Pesos -->
+        <g class="weights">
+          <text class="weight" x="102" y="103">71</text>
+          <text class="weight" x="70" y="170">75</text>
+          <text class="weight" x="202" y="170">151</text>
+          <text class="weight" x="165" y="225">140</text>
+          <text class="weight" x="35" y="285">118</text>
+          <text class="weight" x="125" y="385">111</text>
+          <text class="weight" x="160" y="445">70</text>
+          <text class="weight" x="145" y="520">75</text>
+          <text class="weight" x="240" y="565">120</text>
+          <text class="weight" x="365" y="500">138</text>
+          <text class="weight" x="270" y="455">146</text>
+          <text class="weight" x="295" y="315">80</text>
+          <text class="weight" x="375" y="385">97</text>
+          <text class="weight" x="370" y="245">99</text>
+          <text class="weight" x="515" y="365">211</text>
+          <text class="weight" x="495" y="455">101</text>
+          <text class="weight" x="535" y="555">90</text>
+          <text class="weight" x="640" y="445">85</text>
+          <text class="weight" x="755" y="440">98</text>
+          <text class="weight" x="845" y="500">86</text>
+          <text class="weight" x="725" y="365">142</text>
+          <text class="weight" x="735" y="220">92</text>
+          <text class="weight" x="640" y="125">87</text>
+        </g>
+      </g>
+
+      <!-- Ciudades -->
+      <g class="cities">
+        <g data-city="Oradea"><rect class="node" x="123" y="63" width="14" height="14"/><text class="city" x="143" y="69">Oradea</text></g>
+        <g data-city="Zerind"><rect class="node" x="88" y="128" width="14" height="14"/><text class="city" x="65" y="125" text-anchor="end">Zerind</text></g>
+        <g data-city="Arad"><rect class="node" x="58" y="208" width="14" height="14"/><text class="city" x="54" y="214" text-anchor="end">Arad</text></g>
+        <g data-city="Timisoara"><rect class="node" x="63" y="338" width="14" height="14"/><text class="city" x="82" y="345">Timisoara</text></g>
+        <g data-city="Lugoj"><rect class="node" x="183" y="398" width="14" height="14"/><text class="city" x="205" y="405">Lugoj</text></g>
+        <g data-city="Mehadia"><rect class="node" x="188" y="473" width="14" height="14"/><text class="city" x="210" y="480">Mehadia</text></g>
+        <g data-city="Drobeta"><rect class="node" x="178" y="538" width="14" height="14"/><text class="city" x="174" y="535" text-anchor="end">Drobeta</text></g>
+        <g data-city="Craiova"><rect class="node" x="308" y="558" width="14" height="14"/><text class="city" x="330" y="565">Craiova</text></g>
+        <g data-city="Rimnicu Vilcea"><rect class="node" x="323" y="343" width="14" height="14"/><text class="city" x="345" y="350">Rimnicu Vilcea</text></g>
+        <g data-city="Sibiu"><rect class="node" x="278" y="258" width="14" height="14"/><text class="city" x="298" y="265">Sibiu</text></g>
+        <g data-city="Fagaras"><rect class="node" x="458" y="258" width="14" height="14"/><text class="city" x="458" y="245">Fagaras</text></g>
+        <g data-city="Pitesti"><rect class="node" x="423" y="413" width="14" height="14"/><text class="city" x="400" y="405" text-anchor="end">Pitesti</text></g>
+        <g data-city="Bucharest"><rect class="node" x="578" y="488" width="14" height="14"/><text class="city" x="600" y="495">Bucharest</text></g>
+        <g data-city="Giurgiu"><rect class="node" x="528" y="598" width="14" height="14"/><text class="city" x="525" y="625" text-anchor="end">Giurgiu</text></g>
+        <g data-city="Urziceni"><rect class="node" x="693" y="448" width="14" height="14"/><text class="city" x="715" y="455">Urziceni</text></g>
+        <g data-city="Hirsova"><rect class="node" x="813" y="448" width="14" height="14"/><text class="city" x="810" y="435">Hirsova</text></g>
+        <g data-city="Eforie"><rect class="node" x="863" y="533" width="14" height="14"/><text class="city" x="885" y="540">Eforie</text></g>
+        <g data-city="Vaslui"><rect class="node" x="758" y="268" width="14" height="14"/><text class="city" x="780" y="275">Vaslui</text></g>
+        <g data-city="Iasi"><rect class="node" x="698" y="168" width="14" height="14"/><text class="city" x="720" y="175">Iasi</text></g>
+        <g data-city="Neamt"><rect class="node" x="568" y="113" width="14" height="14"/><text class="city" x="548" y="120" text-anchor="end">Neamt</text></g>
+      </g>
+    </svg>
+
+    <div id="info">Escribe una ruta como: Arad, Sibiu, Fagaras, Bucharest</div>
+    <div class="legend">Los números representan el costo/distancia de cada conexión.</div>
+  </div>
+</div>
+
+<script>
+const edges = [
+  ["Oradea","Zerind",71],["Zerind","Arad",75],["Oradea","Sibiu",151],
+  ["Arad","Sibiu",140],["Arad","Timisoara",118],["Timisoara","Lugoj",111],
+  ["Lugoj","Mehadia",70],["Mehadia","Drobeta",75],["Drobeta","Craiova",120],
+  ["Craiova","Pitesti",138],["Craiova","Rimnicu Vilcea",146],
+  ["Rimnicu Vilcea","Sibiu",80],["Rimnicu Vilcea","Pitesti",97],
+  ["Sibiu","Fagaras",99],["Fagaras","Bucharest",211],
+  ["Pitesti","Bucharest",101],["Bucharest","Giurgiu",90],
+  ["Bucharest","Urziceni",85],["Urziceni","Hirsova",98],
+  ["Hirsova","Eforie",86],["Urziceni","Vaslui",142],
+  ["Vaslui","Iasi",92],["Iasi","Neamt",87]
+];
+
+function normalizeCity(name) {
+  return name.trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function findEdge(a, b) {
+  const na = normalizeCity(a);
+  const nb = normalizeCity(b);
+
+  return document.querySelectorAll(".edge").item(
+    edges.findIndex(e =>
+      (normalizeCity(e[0]) === na && normalizeCity(e[1]) === nb) ||
+      (normalizeCity(e[0]) === nb && normalizeCity(e[1]) === na)
+    )
+  );
+}
+
+function highlightRoute() {
+  const input = document.getElementById("route").value;
+  const cities = input.split(",").map(x => x.trim()).filter(Boolean);
+
+  document.querySelectorAll(".edge").forEach(edge => {
+    edge.classList.remove("highlight", "dim");
+  });
+
+  document.querySelectorAll(".node").forEach(node => {
+    node.classList.remove("selected");
+  });
+
+  if (cities.length < 2) {
+    document.getElementById("info").innerHTML =
+      "Escribe al menos dos ciudades separadas por comas.";
+    return;
+  }
+
+  let highlighted = 0;
+  let missing = [];
+
+  // Resaltar ciudades incluidas en la ruta
+  cities.forEach(cityName => {
+    const city = [...document.querySelectorAll("[data-city]")]
+      .find(c => normalizeCity(c.dataset.city) === normalizeCity(cityName));
+
+    if (city) {
+      city.querySelector(".node").classList.add("selected");
+    } else {
+      missing.push(cityName);
+    }
+  });
+
+  // Resaltar cada tramo consecutivo de la ruta
+  for (let i = 0; i < cities.length - 1; i++) {
+    const edge = findEdge(cities[i], cities[i + 1]);
+
+    if (edge) {
+      edge.classList.add("highlight");
+      highlighted++;
+    } else {
+      missing.push(`${cities[i]} ↔ ${cities[i + 1]}`);
+    }
+  }
+
+  // Atenuar las conexiones que no pertenecen a la ruta
+  document.querySelectorAll(".edge").forEach(edge => {
+    if (!edge.classList.contains("highlight")) {
+      edge.classList.add("dim");
+    }
+  });
+
+  let message = `<strong>Ruta:</strong> ${cities.join(" → ")}<br>
+                 <strong>Tramos encontrados:</strong> ${highlighted}`;
+
+  if (missing.length) {
+    message += `<br><span style="color:#b71c1c">
+      <strong>No encontrados:</strong> ${missing.join(", ")}
+    </span>`;
+  }
+
+  document.getElementById("info").innerHTML = message;
+}
+
+function clearRoute() {
+  document.getElementById("route").value = "";
+  document.querySelectorAll(".edge").forEach(edge => {
+    edge.classList.remove("highlight", "dim");
+  });
+  document.querySelectorAll(".node").forEach(node => {
+    node.classList.remove("selected");
+  });
+  document.getElementById("info").textContent =
+    "Escribe una ruta como: Arad, Sibiu, Fagaras, Bucharest";
+}
+
+// Permitir presionar Enter dentro del textbox
+document.getElementById("route").addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    highlightRoute();
+  }
+});
+
+// También conserva la interacción de hacer clic en una ciudad.
+document.querySelectorAll("[data-city]").forEach(city => {
+  city.addEventListener("click", () => {
+    const name = city.dataset.city;
+    document.querySelectorAll(".node").forEach(n => n.classList.remove("selected"));
+    city.querySelector(".node").classList.add("selected");
+
+    const connections = edges
+      .filter(e => e[0] === name || e[1] === name)
+      .map(e => `${e[0] === name ? e[1] : e[0]} (${e[2]})`);
+
+    document.getElementById("info").innerHTML =
+      `<strong>${name}</strong> → ${connections.join(", ")}`;
+  });
+});
+</script>
+</body>
+</html>
