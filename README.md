@@ -10,3 +10,4 @@
 - 5. [Perceptrón multicapa](./05_Perceptron_multicapa/ejercicio_01.md)
 - 6. [Visión computacional](./06_Vision_computacional/ejercicio_01.md)
 - 7. [Clustering K-medias](./07_Clustering_K_Medias/ejercicio_01.md)
+- 8. [Proyecto final](./proyecto_final/REPORTE.md)

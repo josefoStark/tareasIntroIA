@@ -1,0 +1,16 @@
+# Secretos
+.env
+
+# Índice local de Chroma
+chroma/
+
+# Entornos virtuales
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Sistema
+.DS_Store
